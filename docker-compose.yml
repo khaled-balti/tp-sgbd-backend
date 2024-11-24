@@ -1,0 +1,39 @@
+services:
+  nestjs_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3001:3001'
+    environment:
+      - PORT=3001
+      - NODE_ENV=development
+      - DB_HOST=mysql_db
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=
+      - DB_NAME=microsoft_platform
+    volumes:
+      - ./src:/usr/src/app/src
+    depends_on:
+      - mysql_db
+    networks:
+      - app-network
+
+  mysql_db:
+    image: mysql
+    ports:
+      - '3307:3306'
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: microsoft_platform
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+volumes:
+  mysql_data:
+
+networks:
+  app-network:
